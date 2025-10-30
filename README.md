@@ -28,15 +28,28 @@ Python time module.
                                        Expected response (JSON):
                                        json { "items": [ {"id":"Y21z...","title":"General"}
                                        {"id":"Y21z...""title":"Test Room"}]} 
-                                    2) M|
+                                    2) Method: POST
+                                       URL: https://webexapis.com/v1/messages
+                                       Headers: Authorisation: Bearer <bot_access_token>
+                                       Body (raw JSON):
+                                       json {"roomId":"<Room_Id>","text":"Hello from Space Bot!"}|
                                     
 ---
 ## Section 2: ISS Current Location API (3 marks)
 | Criteria | Details |
 |---------|---------|
-| API Base URL | `_______________________________` |
-| Endpoint for current ISS location | `_______________________________` |
-| Sample response format (example JSON) |
+| API Base URL | http://api.open-notify.org |
+| Endpoint for current ISS location | GET /iss-now.json |
+| Sample postman request (JSON) |
+                                Method: GET
+                                URL: http://api.open-notify.org/iss-now.json
+                                Expected response: {"timestamp":1761819623,
+                                                     "message":"success",
+                                                     "iss_position":{
+                                                         "latitude": "-26.4762",
+                                                         "longitude": "6.0396"
+                                                         }
+                                                         }|
 ```
 ```
 |
