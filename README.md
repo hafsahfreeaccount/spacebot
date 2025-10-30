@@ -54,16 +54,43 @@ Python time module.
 ```
 |
 ---
-## Section 3: Geocoding API (LocationIQ or Mapbox or other) (6 marks)
+## Section 3: Geocoding API (LocationIQ or Mapbox or other) 
 | Criteria | Details |
 |---------|---------|
-| Provider used (circle one) | **LocationIQ / Mapbox/ other -provide detail** |
-| API Base URL | `_______________________________` |
-| Endpoint for reverse geocoding | `_______________________________` |
-| Authentication method | `_______________________________` |
-| Required query parameters | `_______________________________` |
-| Sample request with latitude/longitude | `_______________________________` |
-| Sample JSON response (formatted example) |
+| Provider used (circle one) | **LocationIQ** |
+| API Base URL | https://eu1.locationiq.com/v1 |
+| Endpoint for reverse geocoding | GET /reverse.php |
+| Authentication method | API Key (query parameter key=<API_KEY>) |
+| Required query parameters | key = LocationIQ API key lat = latitude lon = longitude format = json |
+| Sample request with latitude/longitude | Method: Get URL:
+https://us1.locationiq.com/v1/reverse.php?key=<API_KEY>&lat=40.78484&lon=-73.9857&format=json |
+| Sample JSON response (formatted example): json { "place_id":123456789, "licence":"https://locationiq.com/attribution",
+"osm_type":"way",
+"osm_id":"34633854",
+"lat":"40.74844205",
+"lon":"-73.98565890160751",
+"display_name":"Empire State Building, 350, 5th Avenue, Koreatown, Manhattan, New York Country, New York, New York, 10001, USA",
+"address": {
+        "attraction": "Empire State Building",
+        "house_number": "350",
+        "road": "5th Avenue",
+        "neighbourhood": "Koreatown",
+        "suburb": "Manhattan",
+        "county": "New York County",
+        "city": "New York",
+        "state": "New York",
+        "postcode": "10001",
+        "country": "United States of America",
+        "country_code": "us"
+    },
+    "boundingbox": [
+        "40.7479255",
+        "40.7489585",
+        "-73.9865012",
+        "-73.9848166"
+    ]
+}
+|
 ```
 ```
 |
