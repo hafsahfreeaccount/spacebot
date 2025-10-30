@@ -40,19 +40,19 @@ Python time module.
 |---------|---------|
 | API Base URL | http://api.open-notify.org |
 | Endpoint for current ISS location | GET /iss-now.json |
-| Sample postman request (JSON) |
-                                Method: GET
-                                URL: http://api.open-notify.org/iss-now.json
-                                Expected response: {"timestamp":1761819623,
-                                                     "message":"success",
-                                                     "iss_position":{
-                                                         "latitude": "-26.4762",
-                                                         "longitude": "6.0396"
-                                                         }
-                                                         }|
+### Sample postman request (JSON)
+Method: GET
+URL: http://api.open-notify.org/iss-now.json
+Expected response: {"timestamp":1761819623,
+                    "message":"success",
+                    "iss_position":{
+                        "latitude": "-26.4762",
+                        "longitude": "6.0396"
+                                   }
+                    }
+```|
 ```
-```
-|
+
 ---
 ## Section 3: Geocoding API (LocationIQ or Mapbox or other) 
 | Criteria | Details |
@@ -63,33 +63,32 @@ Python time module.
 | Authentication method | API Key (query parameter key=<API_KEY>) |
 | Required query parameters | key = LocationIQ API key lat = latitude lon = longitude format = json |
 | Sample request with latitude/longitude | Method: Get URL:
-   https://us1.locationiq.com/v1/reverse.php?key=     <API_KEY>&lat=40.78484&lon=-73.9857&format=json |
-| Sample JSON response (formatted example): json { "place_id":123456789, "licence":"https://locationiq.com/attribution",
-"osm_type":"way",
-"osm_id":"34633854",
-"lat":"40.74844205",
-"lon":"-73.98565890160751",
-"display_name":"Empire State Building, 350, 5th Avenue, Koreatown, Manhattan, New York Country, New York, New York, 10001, USA",
-"address": {
-        "attraction": "Empire State Building",
-        "house_number": "350",
-        "road": "5th Avenue",
-        "neighbourhood": "Koreatown",
-        "suburb": "Manhattan",
-        "county": "New York County",
-        "city": "New York",
-        "state": "New York",
-        "postcode": "10001",
-        "country": "United States of America",
-        "country_code": "us"
-    },
+|   |  https://us1.locationiq.com/v1/reverse.php?key=<API_KEY>&lat=40.78484&lon=-73.9857&format=json |
+| Sample JSON response (formatted example):| json { "place_id":123456789, "licence":"https://locationiq.com/attribution",
+| |"osm_type":"way",
+| |"osm_id":"34633854",
+| |"lat":"40.74844205",
+| |"lon":"-73.98565890160751",
+| |"display_name":"Empire State Building, 350, 5th Avenue, Koreatown, | |Manhattan, New York Country, New York, New York, 10001, USA",
+| | "address": {
+    ||    "attraction": "Empire State Building",
+    ||    "house_number": "350",
+    ||  "road": "5th Avenue",
+    ||  "neighbourhood": "Koreatown",
+    ||  "suburb": "Manhattan",
+    ||  "county": "New York County",
+    ||  "city": "New York",
+    ||  "state": "New York",
+    ||  "postcode": "10001",
+    ||  "country": "United States of America",
+    ||  "country_code": "us"},
     "boundingbox": [
         "40.7479255",
         "40.7489585",
         "-73.9865012",
-        "-73.9848166"
+        "-73.9848166" |
     ]
-}
+} 
 |
 ```
 ```
