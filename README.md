@@ -63,7 +63,7 @@ Python time module.
 | Authentication method | API Key (query parameter key=<API_KEY>) |
 | Required query parameters | key = LocationIQ API key lat = latitude lon = longitude format = json |
 | Sample request with latitude/longitude | Method: Get URL:
-https://us1.locationiq.com/v1/reverse.php?key=<API_KEY>&lat=40.78484&lon=-73.9857&format=json |
+   https://us1.locationiq.com/v1/reverse.php?key=     <API_KEY>&lat=40.78484&lon=-73.9857&format=json |
 | Sample JSON response (formatted example): json { "place_id":123456789, "licence":"https://locationiq.com/attribution",
 "osm_type":"way",
 "osm_id":"34633854",
