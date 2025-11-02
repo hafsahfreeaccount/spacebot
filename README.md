@@ -5,14 +5,8 @@ Page
 1
 of 2
 # 🚀 Space Bot API Investigation Sheet
-**Total Marks: 30**
-**Part 1: Collect Required API Documentation**
-This investigation sheet helps you gather key technical information from the three
-APIs required for the Space Bot project: **Webex Messaging API**, **ISS Current
-Location API**, and a **Geocoding API** (LocationIQ or Mapbox or other), plus the
-Python time module.
 ---
-## Section 1: Webex Messaging API (7 marks)✅
+## Section 1: Webex Messaging API 
 | Criteria | Details |
 |---------|---------|
 | API Base URL |  https://webexapis.com/v1/ |
@@ -133,9 +127,9 @@ print(human_readable)
 | **View** | Webex messages that display ISS location and timestamps.|
 | **Controller** | Main python loop that monitors messages and coordinates API calls. |
 #### Example:
-- Model:
-- View:
-- Controller:
+- Model: Functions fetching ISS location and reverse geocoding (LocationIQ)
+- View: Webex messages that display ISS location and timestamps
+- Controller: Main python loop that monitors messages and coordinates API calls
 ---
 ### 🚀 Notes
 - Webex API-

@@ -13,8 +13,7 @@ assessemnt brief
 # - Formats and sends the results back to the Webex Team room.
 #
 # The student will:
-# 1. Import libraries for API requests, JSON formatting, epoch time conversion, and
-iso3166.
+# 1. Import libraries for API requests, JSON formatting, epoch time conversion, and iso3166.
 # 2. Complete the if statement to ask the user for the Webex access token.
 # 3. Provide the URL to the Webex room API.
 # 4. Create a loop to print the type and title of each room.
@@ -96,37 +95,45 @@ while True:
 ###
 
 messages_url = "https://webexapis.com/v1/messages"
+print("/nMonitoring room '{}' for commands like /3 or /5...".format(roomTitleToGetMessages))
 while True:
-    time.sleep(1)
-    GetParameters = {
-    "roomId": roomIdToGetMessages,
-    "max": 1
-    }
-    # 5. Provide the URL to the Webex messages API.
-    r = requests.get(messages_url,params = GetParameters,
-    headers = {"Authorization": accessToken})
-    # verify if the retuned HTTP status code is 200/OK
-    if not r.status_code == 200:
-        raise Exception( "Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
-json_data = r.json()
-if len(json_data["items"]) == 0:
-    continue
-messages = json_data["items"]
-message = messages[0]["text"]
-print("received message text: '{}'".format(message))
-if message.find("/") == 0:
-    if (message[1:].isdigit()):
-        seconds = int(message[1:])
+    try:
+        time.sleep(1)
+        GetParameters = {
+        "roomId": roomIdToGetMessages,
+        "max": 1
+        }
+        # 5. Provide the URL to the Webex messages API.
+        r = requests.get(messages_url,params = GetParameters,
+        headers = {"Authorization": accessToken})
+        # verify if the retuned HTTP status code is 200/OK
+        if not r.status_code == 200:
+            raise Exception( "Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
+    
+    json_data = r.json()
+    if len(json_data["items"]) == 0:
+        continue
+    
+    messages = json_data["items"]
+    message = messages[0]["text"]
+    print("received message text: '{}'".format(message))
+    if message.find("/") == 0:
+        if (message[1:].isdigit()):
+            seconds = int(message[1:])
+        else:
+            print("command after '/' is not a numeric value.")
     else:
-        print("command after '/' is not a numeric value.")
-else:
-    continue
+        continue
 #for the sake of testing, the max number of seconds is set to 5.
 if seconds > 5:
-seconds = 5
+    print("Requested secdonds > 5;capping to 5 for safety/testing")
+    seconds = 5
+print("Sleeping for {} seconds...".format(seconds))
 time.sleep(seconds)
+
 # 6. Provide the URL to the ISS Current Location API.
-r = requests.get("<!!!REPLACEME with URL!!!>")
+iss_url = "http://api.open-notify.org/iss-now.json"
+r = requests.get(iss_url, timeout=10)
 json_data = <!!!REPLACEME with code>
 <!!!REPLACEME with code for error handling in case not success response>
 # 7. Record the ISS GPS coordinates and timestamp.
