@@ -1,7 +1,6 @@
 ###############################################################
 #This is just a starter code for the assignment 1,
-# you need to follow the assignment brief to complete all the tasks required by the
-assessemnt brief
+# you need to follow the assignment brief to complete all the tasks required by the assessemnt brief
 #
 # This program:
 # - Asks the user to enter an access token or use the hard coded access token.
@@ -134,79 +133,76 @@ time.sleep(seconds)
 # 6. Provide the URL to the ISS Current Location API.
 iss_url = "http://api.open-notify.org/iss-now.json"
 r = requests.get(iss_url, timeout=10)
-json_data = <!!!REPLACEME with code>
-<!!!REPLACEME with code for error handling in case not success response>
+json_data = r.json()
+if not r.status_code == 200: or json_data.get("message") != "success":
+    print("Error retrieving ISS position: status {}, response: {}".format(r.status_code, r.text))
+    continue
+
 # 7. Record the ISS GPS coordinates and timestamp.
-lat = json_data["<!!!REPLACEME!!!> with path to latitude key!!!>"]
-lng = json_data["<!!!REPLACEME!!!> with path to longitude key!!!>"]
-timestamp = json_data["<!!!REPLACEME!!!> with path to timestamp key!!!>"]
+lat = json_data["iss_position"]["latitude"]
+lng = json_data["iss_position"]["longitude"]
+timestamp = json_data["timestamp"]
+
+
 # 8. Convert the timestamp epoch value to a human readable date and time.
-# Use the time.ctime function to convert the timestamp to a human readable
-date and time.
-timeString = <!!!REPLACEME with conversion code!!!>
+# Use the time.ctime function to convert the timestamp to a human readable date and time.
+timeString = time.ctime(int(timestamp))
+
+
 # 9. Provide your Geoloaction API consumer key.
+locationiq_api_key = "<!!!REPLACEME with your Geolocation API key!!!>"
+mapsAPIurl = "https://us1.locationiq.com/v1/reverse?"
 mapsAPIGetParameters = {
+    'key': locationiq_api_key,
+    'lat': lat,
+    'lon': lng,
+    'format': 'json'
+}
 <!!!REPLACEME with all the required paramenters by
 the api>
-}
+
 # 10. Provide the URL to the Reverse GeoCode API.
 # Get location information using the API reverse geocode service using the HTTP
 GET method
-r = requests.get("<!!!REPLACEME with URL!!!>",
+r = requests.get(mapsAPIurl, params=mapsAPIGetParameters, headers=headers, timeout=10
 params = mapsAPIGetParameters
 )
 # Verify if the returned JSON data from the API service are OK
-json_data = <!!!REPLACEME with code>
+try:
+    json_data = r.json()
+except json.JSONDecodeError:
+    print("Error: failed to decode JSON response from Geolocation API.")
+    json_data = {}
+
 <!!!REPLACEME with code for error handling in case no response>
-# 11. Store the location received from the API in a required variables
-CountryResult = json_data["<!!!REPLACEME!!!> with path to adminArea1 key!!!
->"]
-<!!!REPLACEME with code to save state, city, street etc><!!!REPLACEME with code for error handling>
-messages = json_data["items"]
-message = messages[0]["text"]
-<!!!REPLACEME with print code to print message>
-if message.find("/") == 0:
-if (message[1:].isdigit()):
-seconds = int(message[1:])
+
+if not json_data or "address" not in json_data:
+    print("Warning: No address data found in Geolocation API response.")
+    address = {}
 else:
-<!!!REPLACEME with code for error handling>
-#for the sake of testing, the max number of seconds is set to 5.
-if seconds > 5:
-seconds = 5
-time.sleep(seconds)
-# 6. Provide the URL to the ISS Current Location API.
-r = requests.get("<!!!REPLACEME with URL!!!>")
-json_data = <!!!REPLACEME with code>
-<!!!REPLACEME with code for error handling in case not success response>
-# 7. Record the ISS GPS coordinates and timestamp.
-lat = json_data["<!!!REPLACEME!!!> with path to latitude key!!!>"]
-lng = json_data["<!!!REPLACEME!!!> with path to longitude key!!!>"]
-timestamp = json_data["<!!!REPLACEME!!!> with path to timestamp key!!!>"]
-# 8. Convert the timestamp epoch value to a human readable date and time.
-# Use the time.ctime function to convert the timestamp to a human readable
-date and time.
-timeString = <!!!REPLACEME with conversion code!!!>
-# 9. Provide your Geoloaction API consumer key.
-mapsAPIGetParameters = {
-<!!!REPLACEME with all the required paramenters by
-the api>
-}
-# 10. Provide the URL to the Reverse GeoCode API.
-# Get location information using the API reverse geocode service using the HTTP
-GET method
-r = requests.get("<!!!REPLACEME with URL!!!>",
-params = mapsAPIGetParameters
-)
-# Verify if the returned JSON data from the API service are OK
-json_data = <!!!REPLACEME with code>
-<!!!REPLACEME with code for error handling in case no response>
+    address = json_data["address"]
+
+
+
 # 11. Store the location received from the API in a required variables
-CountryResult = json_data["<!!!REPLACEME!!!> with path to adminArea1 key!!!
->"]
+CountryResult = json_data["<!!!REPLACEME!!!> with path to adminArea1 key!!!]
 <!!!REPLACEME with code to save state, city, street etc>
+CountryResult = (address.get("country_code") or "XZ").upper()
+StateResult = address.get("state") or address.get("country") or ""
+CityResuly = address.get("city") or address.get("town") or address.get("village") or ""
+StreetResult = ""
+if address.get("house_number"):
+    StreetResult += address.get("house_number") + " "
+if address.get("road"):
+    StreetResult += address.get("road")
 #Find the country name using ISO3611 country code
 if not CountryResult == "XZ":
-CountryResult = countries.get(CountryResult).name
+    try:
+        CountryResult = countries.get(CountryResult).name
+    except KeyError:
+        pass #keep the original code if the country code is not found
+
+
 # 12. Complete the code to format the response message.
 # Example responseMessage result: In Austin, Texas the ISS will fly over on Thu
 Jun 18 18:42:36 2020 for 242 seconds.
@@ -214,8 +210,8 @@ Jun 18 18:42:36 2020 for 242 seconds.
 \n{} \n{}, {} \n{}\n({}\", {}\")".format(timeString, StreetResult, CityResult,
 StateResult, CountryResult, lat, lng)
 if CountryResult == "XZ":
-responseMessage = "On {}, the ISS was flying over a body of water at
-latitude {}° and longitude {}°.".format(timeString, lat, lng)
+    responseMessage = "On {}, the ISS was flying over a body of water at
+    latitude {}° and longitude {}°.".format(timeString, lat, lng)
 <!!!REPLACEME with if statements to compose the message to display the current ISS
 location in the Webex Team room!!!>
 elif
