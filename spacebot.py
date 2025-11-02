@@ -42,17 +42,16 @@ if choice.lower() == 'n':
     accessToken = "Bearer " + token_input
 
 else:
-accessToken = "Bearer <!!!REPLACEME with hard-coded token!!!>"
-# 3. Provide the URL to the Webex room API.
-r = requests.get( "webexteams://im?space=f6627110-b4f1-11f0-833c-85c08404fc59",
-headers = {"Authorization": accessToken}
-)
+    accessToken = "Bearer <!!!REPLACEME with hard-coded token!!!>"
+    # 3. Provide the URL to the Webex room API.
+    r = requests.get( "webex url",
+    headers = {"Authorization": accessToken}
+    )
 ###################################################################################
 ####
 # DO NOT EDIT ANY BLOCKS WITH r.status_code
 if not r.status_code == 200:
-raise Exception("Incorrect reply from Webex API. Status code: {}. Text:
-{}".format(r.status_code, r.text))
+    raise Exception("Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
 ###################################################################################
 ####
 # 4. Create a loop to print the type and title of each room.
@@ -85,7 +84,9 @@ while True:
     if(roomIdToGetMessages == None):
         print("Sorry, I didn't find any room with " + roomNameToSearch + " in it.")
         print("Please try again...")
+        #loop continues until a valid room is found
     else:
+        #while loop is exited and proceeds to bot code
          break
 ###################################################################################
 ###
@@ -93,32 +94,33 @@ while True:
 # Starts Webex bot to listen for and respond to /seconds messages.
 ###################################################################################
 ###
+
+messages_url = "https://webexapis.com/v1/messages"
 while True:
-time.sleep(1)
-GetParameters = {
-"roomId": roomIdToGetMessages,
-"max": 1
-}
-# 5. Provide the URL to the Webex messages API.
-r = requests.get("<!!!REPLACEME with URL!!!>",
-params = GetParameters,
-headers = {"Authorization": accessToken}
-)
-# verify if the retuned HTTP status code is 200/OK
-if not r.status_code == <!!!REPLACEME with http code>:
-raise Exception( "Incorrect reply from Webex API. Status code: {}. Text:
-{}".format(r.status_code, r.text))
+    time.sleep(1)
+    GetParameters = {
+    "roomId": roomIdToGetMessages,
+    "max": 1
+    }
+    # 5. Provide the URL to the Webex messages API.
+    r = requests.get(messages_url,params = GetParameters,
+    headers = {"Authorization": accessToken})
+    # verify if the retuned HTTP status code is 200/OK
+    if not r.status_code == 200:
+        raise Exception( "Incorrect reply from Webex API. Status code: {}. Text: {}".format(r.status_code, r.text))
 json_data = r.json()
 if len(json_data["items"]) == 0:
-<!!!REPLACEME with code for error handling>
+    continue
 messages = json_data["items"]
 message = messages[0]["text"]
-<!!!REPLACEME with print code to print message>
+print("received message text: '{}'".format(message))
 if message.find("/") == 0:
-if (message[1:].isdigit()):
-seconds = int(message[1:])
+    if (message[1:].isdigit()):
+        seconds = int(message[1:])
+    else:
+        print("command after '/' is not a numeric value.")
 else:
-<!!!REPLACEME with code for error handling>
+    continue
 #for the sake of testing, the max number of seconds is set to 5.
 if seconds > 5:
 seconds = 5
