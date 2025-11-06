@@ -3,5 +3,6 @@
     "python.terminal.activateEnvironment": true,
     "code-runner.executorMap": {
         "python": ".venv\\Scripts\\python.exe -u"
-    }
+    },
+    "python.analysis.autoImportCompletions": true
 }
