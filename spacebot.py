@@ -1,7 +1,5 @@
 ###############################################################
-#This is just a starter code for the assignment 1,
-# you need to follow the assignment brief to complete all the tasks required by the assessemnt brief
-#
+j
 # This program:
 # - Asks the user to enter an access token or use the hard coded access token.
 # - Lists the user's Webex rooms.
