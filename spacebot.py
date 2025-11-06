@@ -1,5 +1,4 @@
 ###############################################################
-j
 # This program:
 # - Asks the user to enter an access token or use the hard coded access token.
 # - Lists the user's Webex rooms.
