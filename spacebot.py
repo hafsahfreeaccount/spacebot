@@ -30,7 +30,7 @@ if choice.lower() == 'n':
     accessToken = "Bearer " + token_input
 
 else:
-    accessToken = "Bearer:NGFlNTcyMjAtMDkyMi00YTY1LTg3YzgtZjcxY2NiMDNmYzkwOGUzMDQyMWYtNjA1_P0A1_636b97a0-b0af-4297-b0e7-480dd517b3f9"
+    accessToken = "Bearer NGFlNTcyMjAtMDkyMi00YTY1LTg3YzgtZjcxY2NiMDNmYzkwOGUzMDQyMWYtNjA1_P0A1_636b97a0-b0af-4297-b0e7-480dd517b3f9"
     # 3. Provide the URL to the Webex room API.
 
 
