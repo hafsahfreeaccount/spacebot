@@ -125,16 +125,10 @@ print(human_readable)
 |------------|-------------|
 | **Model** | Functions fetching ISS location and reverse geocoding (LocationIQ) |
 | **View** | Webex messages that display ISS location and timestamps.|
-| **Controller** | Main python loop that monitors messages and coordinates API calls. |
-#### Example:
-- Model: Functions fetching ISS location and reverse geocoding (LocationIQ)
-- View: Webex messages that display ISS location and timestamps
-- Controller: Main python loop that monitors messages and coordinates API calls
+| **Controller** | Main python loop that monitors messages and coordinates API calls |
+
 ---
-### 🚀 Notes
-- Webex API-
-- ISS API - http://api.open-notify.org/ 
-- LocationIQ - https://docs.locationiq.com/docs/introduction 
+ 
 ---
 ### Total: /30✅
 
