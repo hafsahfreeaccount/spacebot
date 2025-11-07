@@ -30,7 +30,7 @@ if choice.lower() == 'n':
     accessToken = "Bearer " + token_input
 
 else:
-    accessToken = "Bearer NGFlNTcyMjAtMDkyMi00YTY1LTg3YzgtZjcxY2NiMDNmYzkwOGUzMDQyMWYtNjA1_P0A1_636b97a0-b0af-4297-b0e7-480dd517b3f9"
+    accessToken = "Bearer MDAzN2YwMzItYTQxMi00YjNjLWI3NmYtYjYzNjliZTU3OThhNDVkYmVjNWQtNjgz_P0A1_636b97a0-b0af-4297-b0e7-480dd517b3f9"
     # 3. Provide the URL to the Webex room API.
 
 
@@ -154,6 +154,119 @@ while True:
         lng = json_data["iss_position"]["longitude"]
         timestamp = json_data["timestamp"]
 
+
+
+        # 8. Convert the timestamp epoch value to a human readable date and time.
+        # Use the time.ctime function to convert the timestamp to a human readable date and time.
+        timeString = time.ctime(int(timestamp))
+
+
+        # 9. Provide your Geoloaction API consumer key.
+        locationiq_api_key = "pk.32999e45fa4408225c58c949d08046ef"
+        mapsAPIurl = "https://us1.locationiq.com/v1/reverse?"
+        mapsAPIGetParameters = {
+            'key': locationiq_api_key,
+            'lat': lat,
+            'lon': lng,
+            'format': 'json'
+        }
+
+
+        # 10. Provide the URL to the Reverse GeoCode API.
+        r = requests.get(mapsAPIurl, params=mapsAPIGetParameters, timeout=10)
+
+        # Verify if the returned JSON data from the API service are OK
+        try:
+            json_data = r.json()
+        except json.JSONDecodeError:
+            print("Error: failed to decode JSON response from Geolocation API.")
+            json_data = {}
+        finally:
+            print("Geolocation API response status code: {}".format(r.status_code))
+
+
+        if not json_data or "address" not in json_data:
+            print("Warning: No address data found in Geolocation API response.")
+            address = {}
+        else:
+            address = json_data["address"]
+
+
+
+
+        # 11. Store the location received from the API in a required variables
+        # Default safe values
+        CountryResult = "XZ"
+        StateResult = ""
+        CityResult = ""
+        StreetResult = ""
+
+        try:
+            # If response is OK and has address data
+            if r.status_code == 200 and "address" in json_data:
+                address = json_data["address"]
+                CountryResult = (address.get("country_code") or "XZ").upper()
+                StateResult = address.get("state") or address.get("country") or ""
+                CityResult = address.get("city") or address.get("town") or address.get("village") or ""
+
+                if address.get("house_number") or address.get("road"):
+                    StreetResult = (address.get("house_number", "") + " " + address.get("road", "")).strip()
+
+                # Convert ISO country code to full country name
+                if CountryResult != "XZ":
+                    try:
+                        CountryResult = countries.get(CountryResult).name
+                    except KeyError:
+                        pass
+            else:
+                print(f"Warning: Geolocation lookup failed. Status code: {r.status_code}")
+
+        except Exception as e:
+            print(f"Error processing geolocation data: {e}")
+            CountryResult = "XZ"
+
+
+        # 12. Complete the code to format the response message.
+        # Example responseMessage result: In Austin, Texas the ISS will fly over on Thu Jun 18 18:42:36 2020 for 242 seconds.
+
+        if CountryResult == "XZ":
+            responseMessage = "On {}, the ISS was flying over a body of water at latitude {}° and longitude {}°.".format(timeString, lat, lng)
+        else:
+            if StreetResult:  # street info available
+                responseMessage = "On {}, the ISS was flying over:\n{} \n{}, {} \n{} \n(latitude: {}°, longitude: {}°)".format(timeString, StreetResult, CityResult, StateResult, CountryResult, lat, lng)
+            elif CityResult or StateResult:  # city/state available
+                responseMessage = "On {}, the ISS was flying over {}, {} ({}) at latitude {}° and longitude {}°.".format(timeString, CityResult, StateResult, CountryResult, lat, lng)
+            else:  # only country available
+                responseMessage = "On {}, the ISS was flying over {} at latitude {}° and longitude {}°.".format(timeString, CountryResult, lat, lng)
+
+        # print the response message
+        print("Sending to Webex: " + responseMessage)
+
+        # 13. Complete the code to post the message to the Webex room.
+        HTTPHeaders = {
+            "Authorization": accessToken,  # previously defined Webex Bearer token
+            "Content-Type": "application/json"
+        }
+        PostData = {
+            "roomId": roomIdToGetMessages,
+            "text": responseMessage
+        }
+
+        # Post the call to the Webex message API.
+        r = requests.post(
+            "https://webexapis.com/v1/messages",  # Webex POST messages API
+            data=json.dumps(PostData),
+            headers=HTTPHeaders,
+            timeout=10
+        )
+
+        # Error handling in case request not successful
+        if r.status_code not in (200, 201):
+            print("Failed to post message to Webex. Status: {}, Text: {}".format(r.status_code, r.text))
+        else:
+            print("Message posted successfully to the room.")
+
+
     except KeyboardInterrupt:
         print("Program interrupted by user. Exiting.")
         break
@@ -161,102 +274,3 @@ while True:
     except Exception as e:
         print(f"Error:{e}")
         continue
-
-
-# 8. Convert the timestamp epoch value to a human readable date and time.
-# Use the time.ctime function to convert the timestamp to a human readable date and time.
-timeString = time.ctime(int(timestamp))
-
-
-# 9. Provide your Geoloaction API consumer key.
-locationiq_api_key = "pk.32999e45fa4408225c58c949d08046ef"
-mapsAPIurl = "https://us1.locationiq.com/v1/reverse?"
-mapsAPIGetParameters = {
-    'key': locationiq_api_key,
-    'lat': lat,
-    'lon': lng,
-    'format': 'json'
-}
-
-
-# 10. Provide the URL to the Reverse GeoCode API.
-r = requests.get(mapsAPIurl, params=mapsAPIGetParameters, timeout=10)
-
-# Verify if the returned JSON data from the API service are OK
-try:
-    json_data = r.json()
-except json.JSONDecodeError:
-    print("Error: failed to decode JSON response from Geolocation API.")
-    json_data = {}
-finally:
-    print("Geolocation API response status code: {}".format(r.status_code))
-
-
-if not json_data or "address" not in json_data:
-    print("Warning: No address data found in Geolocation API response.")
-    address = {}
-else:
-    address = json_data["address"]
-
-
-
-
-# 11. Store the location received from the API in a required variables
-CountryResult = json_data["state"]
-CountryResult = (address.get("country_code") or "XZ").upper()
-StateResult = address.get("state") or address.get("country") or ""
-CityResult = address.get("city") or address.get("town") or address.get("village") or ""
-
-StreetResult = ""
-if address.get("house_number"):
-    StreetResult += address.get("house_number") + " "
-if address.get("road"):
-    StreetResult += address.get("road")
-
-#Find the country name using ISO3611 country code
-if not CountryResult == "XZ":
-    try:
-        CountryResult = countries.get(CountryResult).name
-    except KeyError:
-        pass #keep the original code if the country code is not found
-
-
-# 12. Complete the code to format the response message.
-# Example responseMessage result: In Austin, Texas the ISS will fly over on Thu Jun 18 18:42:36 2020 for 242 seconds.
-
-if CountryResult == "XZ":
-    responseMessage = "On {}, the ISS was flying over a body of water at latitude {}° and longitude {}°.".format(timeString, lat, lng)
-else:
-    if StreetResult:  # street info available
-        responseMessage = "On {}, the ISS was flying over:\n{} \n{}, {} \n{} \n(latitude: {}°, longitude: {}°)".format(timeString, StreetResult, CityResult, StateResult, CountryResult, lat, lng)
-    elif CityResult or StateResult:  # city/state available
-        responseMessage = "On {}, the ISS was flying over {}, {} ({}) at latitude {}° and longitude {}°.".format(timeString, CityResult, StateResult, CountryResult, lat, lng)
-    else:  # only country available
-        responseMessage = "On {}, the ISS was flying over {} at latitude {}° and longitude {}°.".format(timeString, CountryResult, lat, lng)
-
-# print the response message
-print("Sending to Webex: " + responseMessage)
-
-# 13. Complete the code to post the message to the Webex room.
-HTTPHeaders = {
-    "Authorization": accessToken,  # previously defined Webex Bearer token
-    "Content-Type": "application/json"
-}
-PostData = {
-    "roomId": roomIdToGetMessages,
-    "text": responseMessage
-}
-
-# Post the call to the Webex message API.
-r = requests.post(
-    "https://webexapis.com/v1/messages",  # Webex POST messages API
-    data=json.dumps(PostData),
-    headers=HTTPHeaders,
-    timeout=10
-)
-
-# Error handling in case request not successful
-if r.status_code not in (200, 201):
-    print("Failed to post message to Webex. Status: {}, Text: {}".format(r.status_code, r.text))
-else:
-    print("Message posted successfully to the room.")
